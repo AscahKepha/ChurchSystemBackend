@@ -22,7 +22,7 @@ export const userTable = pgTable("userTable", {
     firstName: varchar("firstName"),
     lastName: varchar("lastName"),
     email: varchar("email"), 
-    pasasword: varchar("password").notNull(),
+    password: varchar("password").notNull(),
     role: roleEnum("userType").default("member"),
     address: text("address"),
     contactPhone: varchar("contactPhone", {length:255}),
