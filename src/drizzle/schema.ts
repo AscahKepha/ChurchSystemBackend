@@ -31,6 +31,18 @@ export const userTable = pgTable("userTable", {
     updatedAt: timestamp("updatedAt").defaultNow(),
 })
 
+export type TUserInsert = typeof userTable.$inferInsert;
+export type TUserSelect = typeof userTable.$inferSelect;
+
+
+export const userRelations = relations(userTable, ({many}) => ({
+    sermons: many(sermonTable),
+    events: many(eventsTable),
+    offerings: many(offeringsTable),
+    donations: many(donationsTable),
+    ministries: many(ministriesTable),
+}))
+
 //Sermons table
 export const sermonTable = pgTable("sermonTable", {
     sermonId: serial("sermonId").primaryKey(),
@@ -46,6 +58,17 @@ export const sermonTable = pgTable("sermonTable", {
     updatedAt: timestamp("updatedAt").defaultNow(),
 
 })
+
+export type TSermonInsert = typeof sermonTable.$inferInsert;
+export type TSermonSelect = typeof sermonTable.$inferSelect;
+
+export const sermonRelations = relations(sermonTable, ({one}) => ({
+    preacher: one(userTable, {
+        fields: [sermonTable.preacherId],
+        references: [userTable.userId],
+    }),
+}))
+
 //Events table
 export const eventsTable = pgTable("eventsTable", {
     eventsId: serial("eventsId").primaryKey(),
@@ -58,10 +81,20 @@ export const eventsTable = pgTable("eventsTable", {
     location: text("location"),
     imageUrl: text("imageUrl")
     
-
 })
+
+export type TEventsInsert = typeof eventsTable.$inferInsert;
+export type TEventselect = typeof eventsTable.$inferSelect;
+
+export const eventsRelations = relations(eventsTable, ({one}) => ({
+    organizer: one(userTable, {
+        fields: [eventsTable.organizerId],
+        references: [userTable.userId],
+    }),
+}));
+
 //Announcements table
-export const aannouncementsTable = pgTable("announcementsTable", {
+export const announcementsTable = pgTable("announcementsTable", {
     announcementsId: serial("announcementsId").primaryKey(),
     title: text("title"),
     content: text("content"),
@@ -70,7 +103,30 @@ export const aannouncementsTable = pgTable("announcementsTable", {
     updatedAt: timestamp("updatedAt").defaultNow(), 
 
 })
-//Donations/offerings table
+
+export type TAnnouncementssInsert = typeof announcementsTable.$inferInsert;
+export type TAnnouncementsselect = typeof announcementsTable.$inferSelect;
+
+//offerings table
+export const offeringsTable = pgTable("offeringsTable", {
+    offeringsId: serial("offeringsId").primaryKey(),
+    userId: integer("userId").references(()=> userTable.userId, { onDelete: "set null"}),
+    amount: integer("amount"),
+    offeringDate: date("offeringDate"),
+    transactionsId: varchar("transactionsId", {length:255}),
+})
+
+export type TOfferingsInsert = typeof offeringsTable.$inferInsert;
+export type TOfferingsselect = typeof offeringsTable.$inferSelect;
+
+export const offeringsRelations = relations(offeringsTable, ({one}) => ({
+    user: one(userTable, {
+        fields: [offeringsTable.userId],
+        references: [userTable.userId],
+    }),
+}));
+
+//Donations table
 export const donationsTable = pgTable("donationsTable", {
     donationsId: serial("donationsId").primaryKey(),
     donorId: integer("userId").references(()=> userTable.userId, { onDelete: "set null"}),
@@ -79,6 +135,17 @@ export const donationsTable = pgTable("donationsTable", {
     donationstatus: donationsStatus("donationstatus").default("pending"),
     transactionsId: varchar("transactionsId", {length:255}),
 })
+
+export type TDonationsInsert = typeof donationsTable.$inferInsert;
+export type TDonationsselect = typeof donationsTable.$inferSelect;
+
+export const donationsRelations = relations(donationsTable, ({one}) => ({
+    donor: one(userTable, {
+        fields: [donationsTable.donorId],
+        references: [userTable.userId],
+    }),
+}));
+
 //Ministries table
 export const ministriesTable = pgTable("ministriesTable", {
     ministryId: serial("ministryId").primaryKey(),
@@ -87,3 +154,13 @@ export const ministriesTable = pgTable("ministriesTable", {
     leaderId: integer("leaderId").references(()=> userTable.userId, { onDelete: "set null"}),
     contactInfo: text("contactInfo")
 })
+
+export type TMinistriesInsert = typeof ministriesTable.$inferInsert;
+export type TMinistriesselect = typeof ministriesTable.$inferSelect;
+
+export const ministriesRelations = relations(ministriesTable, ({one}) => ({
+    leader: one(userTable, {
+        fields: [ministriesTable.leaderId],
+        references: [userTable.userId],
+    }),
+}));
