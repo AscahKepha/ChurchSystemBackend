@@ -38,10 +38,10 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 
     try {
-        const requester = req.user;
+        const requester = req.user; //it is here that I form a requester as a constant the Id from where the request is coming from
 
-        if (requester?.role === "patient" && parseInt(requester.userId.toString()) !== requestedId) {
-            res.status(403).json({ error: "Forbidden: patients can only access their own profile" });
+        if (requester?.role === "member" && parseInt(requester.userId.toString()) !== requestedId) {
+            res.status(403).json({ error: "Forbidden: members can only access their own profile" });
             return;
         }
 
@@ -81,7 +81,7 @@ export const createUser = async (req: Request, res: Response) => {
         });
 
         if (!newUser) {
-            res.status(500).json({ message: "Failed to create user" });
+            res.status(500).json({ message: "Failed to create user, the user already exists" });
             return;
         }
 
@@ -123,6 +123,28 @@ export const updateUser = async (req: Request, res: Response) => {
         });
         return;
     }
+    try { 
+        const userUpdates: any ={
+            firstName,
+            lastName,
+            email,
+            contactPhone,
+            address: address || null,
+        };
+
+        if (password && password.trim() !== ""){
+            userUpdates.password = password;
+        }
+
+        const updatedUser = await updateUserServices(requestedId, userUpdates);
+
+        if (!updatedUser) {
+            res 
+            .status(404)
+            .json({error: "User not found or failed to update"});
+            return;
+        }
+    
         console.log("✅ Profile update successful");
         res.status(200).json({ message: "Profile updated successfully" });
         return;
