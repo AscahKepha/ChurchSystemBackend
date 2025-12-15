@@ -57,7 +57,7 @@ export const sermonTable = pgTable("sermonTable", {
     createdAt: timestamp("createdAt").defaultNow(),
     updatedAt: timestamp("updatedAt").defaultNow(),
 
-})
+}) 
 
 export type TSermonInsert = typeof sermonTable.$inferInsert;
 export type TSermonSelect = typeof sermonTable.$inferSelect;
@@ -153,7 +153,7 @@ export const ministriesTable = pgTable("ministriesTable", {
     description: text("description"),
     leaderId: integer("leaderId").references(()=> userTable.userId, { onDelete: "set null"}),
     contactInfo: text("contactInfo")
-})
+}) 
 
 export type TMinistriesInsert = typeof ministriesTable.$inferInsert;
 export type TMinistriesselect = typeof ministriesTable.$inferSelect;
