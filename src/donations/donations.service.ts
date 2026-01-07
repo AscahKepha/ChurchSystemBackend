@@ -5,7 +5,7 @@ import { donationsTable, } from "../drizzle/schema";
 import { TDonationsselect, TDonationsInsert } from "../drizzle/schema"
 
 //Get all donationss
-export const getdonationssServices = async (): Promise<TDonationsselect[] | null> => {
+export const getdonationsServices = async (): Promise<TDonationsselect[] | null> => {
   return await db.query.donationsTable.findMany({
     orderBy: [desc(donationsTable.donationsId)]
   });

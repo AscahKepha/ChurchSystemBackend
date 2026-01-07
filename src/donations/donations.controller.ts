@@ -1,106 +1,106 @@
 import {Request, Response}from "express";
-import { createdonationssServices, deletedonationssServices, getdonationssServices, getdonationssByIdServices,updatedonationssServices } from "./donationss.service";
+import { createdonationsServices, deletedonationsServices, getdonationsServices, getdonationsByIdServices,updatedonationsServices } from "./donations.service";
 import { eq } from "drizzle-orm";
 import db from "../drizzle/db";
 //business logic git 
 
-//Business logic for getdonationss
-export const getdonationss= async(req:Request, res:Response)=>{
+//Business logic for getdonations
+export const getdonations= async(req:Request, res:Response)=>{
     try {
-        const alldonationss = await getdonationssServices();
-        if (alldonationss == null || alldonationss.length == 0){
-            res.status(404).json({message:" No donationsss found"});
+        const alldonations = await getdonationsServices();
+        if (alldonations == null || alldonations.length == 0){
+            res.status(404).json({message:" No donationss found"});
         }else {
-            res.status(200).json(alldonationss);
+            res.status(200).json(alldonations);
 
         }
     }
         catch (error: any) {
-            res.status(500).json({error: error.message || "Failed to fetch donationss"});
+            res.status(500).json({error: error.message || "Failed to fetch donations"});
         }
 }
 
-//Business logic for getdonationssById
-export const getdonationssById= async(req:Request, res:Response) => {
-    const donationssId = parseInt(req.params.id);
-    if (isNaN(donationssId)){
-        res.status(400).json({message: "Invalid donationss Id"});
+//Business logic for getdonationsById
+export const getdonationsById= async(req:Request, res:Response) => {
+    const donationsId = parseInt(req.params.id);
+    if (isNaN(donationsId)){
+        res.status(400).json({message: "Invalid donations Id"});
         return;
     }
     try {
-        const donationss = await getdonationssByIdServices(donationssId);
-        if (donationss == undefined){
-            res.status(404).json({message: "donationss not found"});
+        const donations = await getdonationsByIdServices(donationsId);
+        if (donations == undefined){
+            res.status(404).json({message: "donations not found"});
         } else {
-            res.status(200).json({donationss});
+            res.status(200).json({donations});
         }
     } catch (error: any){
-        res.status(500).json({ error:error.message || "Failed to fetch donationss"});
+        res.status(500).json({ error:error.message || "Failed to fetch donations"});
     }
 
 }
 
-//Business logic for creating donationss
-export const createdonationss = async(req:Request, res:Response) =>{
-    const {organizerId, donationsDate, title, description, startDate, endDate, location, imageUrl} = req.body;
-    if ( !organizerId || !donationsDate || !title || !description || !startDate || !endDate || !location || !imageUrl ){
+//Business logic for creating donations
+export const createdonations = async(req:Request, res:Response) =>{
+    const {donorId,amount,donationDate,donationstatus,transactionsId} = req.body;
+    if (!donorId || !amount || !donationDate || !donationstatus || !transactionsId) {
         res.status(400).json({error: "All fields are required"});
         return;
 }
 
 try{
-    const newdonationss = await createdonationssServices({organizerId, donationsDate, title, description, startDate, endDate, location, imageUrl}); 
-    if (newdonationss == null) {
-        res.status(500).json({message: "Failed to create donationss"});
+    const newdonations = await createdonationsServices({donorId,amount,donationDate,donationstatus,transactionsId}); 
+    if (newdonations == null) {
+        res.status(500).json({message: "Failed to create donations"});
     }else {
-        res.status(201).json({message: newdonationss});
+        res.status(201).json({message: newdonations});
     }
 } catch  (error:any) {
-    res.status(500).json({error: error.message || "Failed to create an donationss " });}
+    res.status(500).json({error: error.message || "Failed to create an donations " });}
 }
 
 
-//Business logic for updating donationss
-export  const updatedonationss = async (req:Request, res: Response) => {
-    const donationssId = parseInt(req.params.Id);
-    if (isNaN(donationssId)) {
-        res.status(400).json({ error: "Invalid donationss Id" });
+//Business logic for updating donations
+export  const updatedonations = async (req:Request, res: Response) => {
+    const donationsId = parseInt(req.params.Id);
+    if (isNaN(donationsId)) {
+        res.status(400).json({ error: "Invalid donations Id" });
         return;
     }
-    const { organizerId, donationsDate, title, description, startDate, endDate, location, imageUrl} = req.body;
-    if (!organizerId || !donationsDate || !title || !description || !startDate || !endDate || !location || !imageUrl) {
+    const { donorId,amount,donationDate,donationstatus,transactionsId} = req.body;
+    if (!donorId || !amount || !donationDate || !donationstatus || !transactionsId) {
 
         res.status(400).json({ error: "All fields are required"});
         return;
     }
     try {
-        const updateddonationss = await updatedonationssServices(donationssId, {organizerId, donationsDate, title, description, startDate, endDate, location, imageUrl});
-        if (updatedonationss == null) {
-            res.status(404).json({message: "donationss not found or failed to update"});
+        const updateddonations = await updatedonationsServices(donationsId, {donorId,amount,donationDate,donationstatus,transactionsId});
+        if (updatedonations == null) {
+            res.status(404).json({message: "donations not found or failed to update"});
         } else {
-            res.status(200).json ({message:updateddonationss});
+            res.status(200).json ({message:updateddonations});
         }
     }catch (error:any) {
-        res.status(500).json({error:error.message || "Failed to update donationss"});
+        res.status(500).json({error:error.message || "Failed to update donations"});
     }
 }
 
-//Business logic for deleting donationss
-export const deletedonationss = async (req:Request, res:Response) => {
-    const donationssId = parseInt(req.params.id);
-    if (isNaN(donationssId)) {
-        res.status(400).json({error: "Invalid donationss ID"});
+//Business logic for deleting donations
+export const deletedonations = async (req:Request, res:Response) => {
+    const donationsId = parseInt(req.params.id);
+    if (isNaN(donationsId)) {
+        res.status(400).json({error: "Invalid donations ID"});
         return;
     }
     try {
-        const deleteddonationss = await deletedonationssServices(donationssId);
-        if (deleteddonationss) {
-            res.status(200).json({message: "donationss deleted successfully"});
+        const deleteddonations = await deletedonationsServices(donationsId);
+        if (deleteddonations) {
+            res.status(200).json({message: "donations deleted successfully"});
         } else {
-            res.status(404).json({message: "donationss not found"});
+            res.status(404).json({message: "donations not found"});
         }
         } catch (error:any) {
-            res.status(500).json ({error:error.message || "Failed to delete donationss"});
+            res.status(500).json ({error:error.message || "Failed to delete donations"});
         }
     }
 

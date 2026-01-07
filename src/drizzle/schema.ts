@@ -104,7 +104,7 @@ export const announcementsTable = pgTable("announcementsTable", {
 
 })
 
-export type TAnnouncementssInsert = typeof announcementsTable.$inferInsert;
+export type TAnnouncementsInsert = typeof announcementsTable.$inferInsert;
 export type TAnnouncementsselect = typeof announcementsTable.$inferSelect;
 
 //offerings table
@@ -133,7 +133,7 @@ export const donationsTable = pgTable("donationsTable", {
     amount: integer("amount"),
     donationDate: date("donationDate"),
     donationstatus: donationsStatus("donationstatus").default("pending"),
-    transactionsId: varchar("transactionsId", {length:255}),
+    transactionsId: varchar("transactionsId", {length:255}), 
 })
 
 export type TDonationsInsert = typeof donationsTable.$inferInsert;
