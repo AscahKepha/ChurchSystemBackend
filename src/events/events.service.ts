@@ -1,39 +1,39 @@
 //crud operations and services (create,r..,update,delete)
 import { eq, desc } from "drizzle-orm";
 import db from "../drizzle/db";
-import { userTable, } from "../drizzle/schema";
-import { TUserSelect, TUserInsert } from "../drizzle/schema"
+import { eventsTable, } from "../drizzle/schema";
+import { TEventSelect, TEventsInsert } from "../drizzle/schema"
 
-//Get all users
-export const getUsersServices = async (): Promise<TUserSelect[] | null> => {
-  return await db.query.userTable.findMany({
-    orderBy: [desc(userTable.userId)]
+//Get all eventss
+export const geteventsServices = async (): Promise<TEventSelect[] | null> => {
+  return await db.query.eventsTable.findMany({
+    orderBy: [desc(eventsTable.eventsId)]
   });
 }
 
-//Get user by ID
-export const getUserByIdServices = async (userId: number): Promise<TUserSelect | undefined> => {
-  return await db.query.userTable.findFirst({
-    where: eq(userTable.userId, userId)
+//Get events by ID
+export const geteventsByIdServices = async (eventsId: number): Promise<TEventSelect | undefined> => {
+  return await db.query.eventsTable.findFirst({
+    where: eq(eventsTable.eventsId, eventsId)
   })
 }
 
 
-// Create a new user
-export const createUserServices = async (user: TUserInsert): Promise<string> => {
-  await db.insert(userTable).values(user).returning();
-  return "User Created Successfully 😎"
+// Create a new events
+export const createeventsServices = async (events: TEventsInsert): Promise<string> => {
+  await db.insert(eventsTable).values(events).returning();
+  return "events Created Successfully 😎"
 }
 
-// Update an existing user
-export const updateUserServices = async (userId: number, user: TUserInsert): Promise<string> => {
-  await db.update(userTable).set(user).where(eq(userTable.userId, userId));
-  return "User Updated Succeffully 😎";
+// Update an existing events
+export const updateeventsServices = async (eventsId: number, events: TEventsInsert): Promise<string> => {
+  await db.update(eventsTable).set(events).where(eq(eventsTable.eventsId, eventsId));
+  return "events Updated Succeffully 😎";
 }
 
-//delete user
-export const deleteUserServices = async (userId: number): Promise<string> => {
-  await db.delete(userTable).where(eq(userTable.userId, userId));
-  return "User Delete Sucessfully";
+//delete events
+export const deleteeventsServices = async (eventsId: number): Promise<string> => {
+  await db.delete(eventsTable).where(eq(eventsTable.eventsId, eventsId));
+  return "events Delete Sucessfully";
 }
 

@@ -84,7 +84,7 @@ export const eventsTable = pgTable("eventsTable", {
 })
 
 export type TEventsInsert = typeof eventsTable.$inferInsert;
-export type TEventselect = typeof eventsTable.$inferSelect;
+export type TEventSelect = typeof eventsTable.$inferSelect;
 
 export const eventsRelations = relations(eventsTable, ({one}) => ({
     organizer: one(userTable, {
