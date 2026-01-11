@@ -102,7 +102,7 @@ export const announcementsTable = pgTable("announcementsTable", {
     createdAt: timestamp("createdAt").defaultNow(),
     updatedAt: timestamp("updatedAt").defaultNow(), 
 
-})
+}) 
 
 export type TAnnouncementsInsert = typeof announcementsTable.$inferInsert;
 export type TAnnouncementsselect = typeof announcementsTable.$inferSelect;
